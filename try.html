@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HIJACKED</title>
+    <style>
+        body { background-color: #111; color: #0f0; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        button { background: #008000; color: #fff; padding: 15px 30px; border: none; cursor: pointer; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <button onclick="sendExploit()">ACTIVATE</button>
+
+    <script>
+        // Этот код выполняется ВНУТРИ БРАУЗЕРА
+        
+        // ВАЖНО: Тебе нужно найти настоящий ивент для добавления денег
+        const TARGET_EVENT_NAME = "server::addCoinsBypassed"; 
+        
+        // ВАЖНО: Если сервер использует мост cefProc, тебе нужен ключ v1. 
+        // Мы не можем получить его из CEF напрямую (он в памяти клиента), 
+        // поэтому эта кнопка будет работать только если сервер не проверяет v1 на этом канале, 
+        // или если ты вставишь v1 вручную в код.
+
+        function sendExploit() {
+            // Если ивент не требует сложной структуры (как cefProc), 
+            // мы просто шлем его напрямую
+            
+            if (typeof mp.trigger === 'function') {
+                // Пытаемся вызвать упрощенный ивент
+                // Аргументы: [Сумма, Тип (0=нал)]
+                mp.trigger(TARGET_EVENT_NAME, 999999, 0); 
+                
+                document.body.innerHTML = '<h1>ATTEMPT SENT!</h1>';
+            } else {
+                alert("Ошибка: mp.trigger не найдена. Код не работает.");
+            }
+        }
+    </script>
+</body>
+</html>
